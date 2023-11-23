@@ -15,7 +15,6 @@ export type TAddress={
 //add a new product Type 
 export type TOrders={
 
-    id:number,
     productName:string;
     price:number;
     quantity:number;
@@ -31,6 +30,7 @@ export type TUser={
     isActive:boolean;
     hobbies:string[];
     address:TAddress;
+    orders?:TOrders
 }
 
 

@@ -1,7 +1,7 @@
-import {  TOrders, UserMethodModel } from './modules/Users/OrderManagement.Interface';
+
 /* eslint-disable @typescript-eslint/no-this-alias */
 import {  Schema, model } from 'mongoose';
-import { TAddress, TFullName, TUser } from './modules/Users/OrderManagement.Interface';
+import { TAddress, TFullName, TUser,UserMethodModel,TOrders } from './modules/Users/OrderManagement.Interface';
 import bcrypt   from 'bcrypt';
 import config from './config';
 
@@ -26,8 +26,9 @@ const TAddressSchema=new Schema<TAddress>({
 
 //order schema 
 
+//order schema 
+
 const TOrdersSchema= new Schema<TOrders>({
-    id:{type:Number,required:[true,'Id is Required']},
     productName:{type:String,required:[true,'Product Name is Requires']},
     price:{type:Number,required:[true,'Price is Required']},
     quantity:{type:Number,required:[true,'Quentity is Required']}
@@ -45,7 +46,8 @@ age:{type:Number,required:[true,'Age is Required']},
 email:{type:String,required:[true,'Email is Required'],unique:true},
 isActive:{type:Boolean,required:[true,'isActive is Required']},
 hobbies:{type:[String],required:[true,'Hobbies is Required']},
-address:{type:TAddressSchema,required:[true,'Address is Required']}
+address:{type:TAddressSchema,required:[true,'Address is Required']},
+orders:{type:TOrdersSchema,required:[false,'Order is not']}
 });
 
 TUserSchema.set('toJSON', {
@@ -83,5 +85,5 @@ TUserSchema.statics.isUserExists=async function(id:number){
 
 //Users Modules
 export const Users= model<TUser,UserMethodModel>('users',TUserSchema);
-export const Orders=model<TOrders>('order',TOrdersSchema);
+
 

@@ -126,12 +126,10 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
 
         const {userId}=req.params;
         const data=req.body;
-        const orderValidation=TOrdersValidation.parse(data);
-        const userOrder={id:Number(userId),...orderValidation}
-        //const OrderValidtion=TOrdersValidation.parse(data);
-        const result=await UsersServices.productOrder(Number(userId),userOrder);
-        res.status(200).send({success:'true',message:"Order created successfully!",data:result});
-
+        const orderValidauionData=TOrdersValidation.parse(data);
+        const result=await UsersServices.productOrder(Number(userId),orderValidauionData)
+       res.send({success:true,message:"Order created successfully!",orders:result});
+        
 
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -147,13 +145,14 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
 //  specific User Order controller
 const  specific_User_Order=async(req:Request,res:Response)=>{
 
-
-
-
   try{
     const {userId}=req.params;
     const result=await UsersServices.specificUserOrder(Number(userId));
-    res.status(200).send({success:true,message:'Order fetched successfully!',orders:result})
+    res.status(200).send({success:true,message:'Order fetched successfully!',data:result.reduce((accumulator, currentObject) => {
+        // Merge properties of currentObject into accumulator
+        Object.assign(accumulator, currentObject);
+        return accumulator;
+      }, {})})
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   catch(err:any)
@@ -197,5 +196,6 @@ export const UsersControllers={
     product_Order,
     specific_User_Order,
     calculateTotalPrice_SpecificOrder
+   
    
 }

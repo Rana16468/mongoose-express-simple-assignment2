@@ -1,5 +1,5 @@
-import { Orders, Users } from "../../OrderManagement.model";
-import { TUser ,TOrders} from "./OrderManagement.Interface"
+import { Users } from "../../OrderManagement.model";
+import { TOrders, TUser} from "./OrderManagement.Interface"
 
 // create user 
 const createUser=async(user:TUser)=>{
@@ -11,8 +11,9 @@ const createUser=async(user:TUser)=>{
 // find all user information 
 const  retrieveAllUsers=async()=>{
 
-    const result=await Users.find({},{ username: 1, fullName: 1, age: 1, email: 1, address: 1 });
-   return result;
+    const result=await Users.find({},{ username: 1, fullName: 1, age: 1, email: 1, address: 1});
+   
+    return result;
 
     
 }
@@ -23,7 +24,7 @@ const specificUserInformation=async(id:number)=>{
     if(await Users.isUserExists(id))
     {
 
-        const result=await Users.findOne({userId:id},{password:0});
+        const result=await Users.aggregate([{$match:{userId:id}}]);
         return result;
     }
     else{
@@ -75,8 +76,8 @@ const productOrder= async(id:number,data:TOrders)=>{
   
     if(await Users.isUserExists(id)){
 
-         const  buildInInstanseOrders=new Orders(data);
-         const result=await buildInInstanseOrders.save();
+       
+       const result=await Users.updateOne({userId:id},{$push:{orders:data}})
          return result;
     }
     else{
@@ -91,7 +92,7 @@ const productOrder= async(id:number,data:TOrders)=>{
 
     if(await Users.isUserExists(id))
     {
-        const result=await Orders.aggregate([{$match:{id}}]).project({id:0});
+        const result=await Users.aggregate([{$match:{userId:id}}]).project({_id:0,orders:'$orders'});
         return result;
 
     }
@@ -105,12 +106,14 @@ const calculateTotalPrice= async(id:number)=>{
 
     if(await Users.isUserExists(id))
     {
-        const result=await Orders.aggregate([
+        const result=await Users.aggregate([
             //state 1
-            {$match:{id}},
-            //state 2  
-            {$project:{SpecificFieldPrice:{$sum:{$multiply:['$price','$quantity']}}}},
-            //stage 3
+            {$match:{userId:id}},
+            //statge 2
+            {$unwind:'$orders'},
+            //state 3 
+            {$project:{SpecificFieldPrice:{$sum:{$multiply:['$orders.price','$orders.quantity']}}}},
+            //stage 4
             {$group:{_id: null,totalPrice:{$sum:'$SpecificFieldPrice'}}}
         ]).project({_id:0})
         return result;
@@ -133,6 +136,7 @@ export const UsersServices={
     productOrder,
     specificUserOrder,
     calculateTotalPrice
+
 
 }
 
