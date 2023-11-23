@@ -1,5 +1,5 @@
-import { Users } from "../../OrderManagement.model";
-import { TUser } from "./OrderManagement.Interface"
+import { Orders, Users } from "../../OrderManagement.model";
+import { TUser ,TOrders} from "./OrderManagement.Interface"
 
 // create user 
 const createUser=async(user:TUser)=>{
@@ -19,17 +19,98 @@ const  retrieveAllUsers=async()=>{
 // specific User Infrormation
 const specificUserInformation=async(id:number)=>{
 
-  
+    
+    if(await Users.isUserExists(id))
+    {
 
-    const result=await Users.findOne({userId:id},{password:0});
+        const result=await Users.findOne({userId:id},{password:0});
+        return result;
+    }
+    else{
+        throw new Error('Not Exists User Informathion in the Database')
+    }
+}
+
+// update user information 
+
+const UpdateUserInformation= async(id:number,data:object)=>{
+
+    //password field not Included
+    
+
+   if(await Users.isUserExists(id))
+   {
+    Reflect.deleteProperty(data,'password');
+    const filter={userId:id}
+    const updateData={
+      $set:{...data}
+    }
+    const result= await Users.updateOne(filter,updateData,{upsert:true});
     return result;
+   }
+   else{
+      throw new Error('Not Exists User Informathion in the Database')
+   }
+}
+
+//delete user information 
+const DeleteUserInformation= async(id:number)=>{
+
+   if(await Users.isUserExists(id))
+   {
+    const query={userId:id};
+    const result=await Users.deleteOne(query);
+    return result;
+   }
+   else{
+    throw new Error('Not Exists User Informathion in the Database')
+   }
 
 
 }
+
+//order information added using put method
+const productOrder= async(id:number,data:TOrders)=>{
+
+  
+    if(await Users.isUserExists(id)){
+
+         const  buildInInstanseOrders=new Orders(data);
+         const result=await buildInInstanseOrders.save();
+         return result;
+    }
+    else{
+        throw new Error('Not Exists User Informathion in the Database')
+       }
+
+
+}
+ //Retrieve speciifc user Orders
+
+ const specificUserOrder= async(id:number)=>{
+
+    if(await Users.isUserExists(id))
+    {
+        const result=await Orders.aggregate([{$match:{id}}]).project({id:0});
+        return result;
+
+    }
+    else{
+        throw new Error('Not Exists User Informathion in the Database')
+    }
+}
+
+// Calculate Total Price of Orders for a Specific User
+
+
 export const UsersServices={
     createUser,
     retrieveAllUsers,
-    specificUserInformation
+    specificUserInformation,
+    UpdateUserInformation,
+    DeleteUserInformation,
+    productOrder,
+    specificUserOrder
 
 }
 

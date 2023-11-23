@@ -26,10 +26,22 @@ const TUserSchemaValidation  = z.object({
     {message:'Maximum Password Length 30 character'}),
   fullName: TFullNameSchema,
   age: z.number(),
-  email: z.string().min(1).max(50),
+  email: z.string().min(1).max(50).email(),
   isActive: z.boolean(),
   hobbies: z.array(z.string().min(1).max(50)),
   address: TAddressSchema,
 });
+
+//order valodion 
+export  const TOrdersValidation=z.object({
+
+  productName:z.string(),
+  price:z.number(),
+  quantity:z.number()
+
+
+});
+
+
 
 export default TUserSchemaValidation;

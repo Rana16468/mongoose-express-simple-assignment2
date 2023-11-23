@@ -1,8 +1,14 @@
+import {  TOrders, UserMethodModel } from './modules/Users/OrderManagement.Interface';
 /* eslint-disable @typescript-eslint/no-this-alias */
 import {  Schema, model } from 'mongoose';
 import { TAddress, TFullName, TUser } from './modules/Users/OrderManagement.Interface';
 import bcrypt   from 'bcrypt';
 import config from './config';
+
+
+
+
+
 
 
 const TFullNameSchema=new Schema<TFullName>({
@@ -16,9 +22,20 @@ const TAddressSchema=new Schema<TAddress>({
     city:{type:String,required:[true,'City is Required']},
     country:{type:String,required:[true,'Country is Required']}
 
-})
+});
 
-const TUserSchema= new Schema<TUser>({
+//order schema 
+
+const TOrdersSchema= new Schema<TOrders>({
+    id:{type:Number,required:[true,'Id is Required']},
+    productName:{type:String,required:[true,'Product Name is Requires']},
+    price:{type:Number,required:[true,'Price is Required']},
+    quantity:{type:Number,required:[true,'Quentity is Required']}
+
+});
+
+
+const TUserSchema= new Schema<TUser,UserMethodModel>({
 
 userId:{type:Number,required:[true,'UserId is Requiresd'],unique:true},
 username:{type:String,required:[true,'User Name is Required'],unique:true},
@@ -31,6 +48,14 @@ hobbies:{type:[String],required:[true,'Hobbies is Required']},
 address:{type:TAddressSchema,required:[true,'Address is Required']}
 });
 
+TUserSchema.set('toJSON', {
+    virtuals: true,
+    transform: function (doc, ret) {
+      delete ret.password;
+      return ret;
+    },
+  });
+
 //mongoode middlewere 
 TUserSchema.pre('save', async function(next){
 
@@ -38,15 +63,25 @@ TUserSchema.pre('save', async function(next){
     user.password=await bcrypt.hash(user.password,Number(config.bcrypt_salt_rounds));
     next();
 });
+TUserSchema.pre('updateOne',async function(next){
 
-TUserSchema.post('save',function(doc,next){ 
-   
-   doc.password=""
-
+    
+    
     next();
-  
 })
 
 
+
+//static methods
+TUserSchema.statics.isUserExists=async function(id:number){
+
+    const existingUser=await Users.exists({userId:id});
+    return existingUser;
+
+
+}
+
 //Users Modules
-export const Users= model<TUser>('users',TUserSchema);
+export const Users= model<TUser,UserMethodModel>('users',TUserSchema);
+export const Orders=model<TOrders>('order',TOrdersSchema);
+
