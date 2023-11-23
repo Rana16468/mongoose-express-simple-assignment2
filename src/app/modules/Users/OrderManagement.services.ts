@@ -101,7 +101,28 @@ const productOrder= async(id:number,data:TOrders)=>{
 }
 
 // Calculate Total Price of Orders for a Specific User
+const calculateTotalPrice= async(id:number)=>{
 
+    if(await Users.isUserExists(id))
+    {
+        const result=await Orders.aggregate([
+            //state 1
+            {$match:{id}},
+            //state 2  
+            {$project:{SpecificFieldPrice:{$sum:{$multiply:['$price','$quantity']}}}},
+            //stage 3
+            {$group:{_id: null,totalPrice:{$sum:'$SpecificFieldPrice'}}}
+        ]).project({_id:0})
+        return result;
+    }
+    else{
+        throw new Error('Not Exists User Informathion in the Database')
+    }
+
+    
+
+
+}
 
 export const UsersServices={
     createUser,
@@ -110,7 +131,8 @@ export const UsersServices={
     UpdateUserInformation,
     DeleteUserInformation,
     productOrder,
-    specificUserOrder
+    specificUserOrder,
+    calculateTotalPrice
 
 }
 

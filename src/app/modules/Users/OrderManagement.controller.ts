@@ -166,6 +166,27 @@ const  specific_User_Order=async(req:Request,res:Response)=>{
   }
 }
 
+// Calculate Total Price of Orders for a Specific User
+
+const calculateTotalPrice_SpecificOrder=async(req:Request,res:Response)=>{
+
+    try{
+        const {userId}=req.params;
+        const result=await UsersServices.calculateTotalPrice(Number(userId));
+        res.status(200).send({success:true,message:'Total price calculated successfully!',data:result})
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch(err:any)
+    {
+        res.status(500).send({success:false,message:'User not found',error:{
+            code: 404,
+            description: "User not found!",
+            serverErrorMessage:err.message
+      }})
+    }
+
+
+}
 
 export const UsersControllers={
     createUserController,
@@ -174,6 +195,7 @@ export const UsersControllers={
     Update_User_Information,
     deleteUser,
     product_Order,
-    specific_User_Order
+    specific_User_Order,
+    calculateTotalPrice_SpecificOrder
    
 }
