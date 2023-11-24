@@ -112,7 +112,7 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
 
         const {userId}=req.params;
         const result=await UsersServices.DeleteUserInformation(Number(userId));
-        res.status(200).send({success:'true',message:"User deleted successfully!",data:result});
+        res.status(200).send({success:'true',message:"User deleted successfully!",data:result?.deletedCount===1?null:'User not found!'});
 
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -135,7 +135,7 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
         const data=req.body;
         const orderValidauionData=TOrdersValidation.parse(data);
         const result=await UsersServices.productOrder(Number(userId),orderValidauionData)
-       res.send({success:true,message:"Order created successfully!",orders:result});
+       res.send({success:true,message:"Order created successfully!",orders:result?.matchedCount===1?null:'Order Not Create Successfully'});
         
 
     }
@@ -179,7 +179,10 @@ const calculateTotalPrice_SpecificOrder=async(req:Request,res:Response)=>{
     try{
         const {userId}=req.params;
         const result=await UsersServices.calculateTotalPrice(Number(userId));
-        res.status(200).send({success:true,message:'Total price calculated successfully!',data:result})
+        res.status(200).send({success:true,message:'Total price calculated successfully!',data:result.reduce((accumulator, currentObject)=>{
+            Object.assign(accumulator, currentObject);
+            return accumulator;
+        },{})});
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch(err:any)
