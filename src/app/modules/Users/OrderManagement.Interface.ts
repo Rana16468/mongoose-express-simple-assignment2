@@ -12,7 +12,7 @@ export type TAddress={
     city:string;
     country:string;
 }
-//add a new product Type 
+// order 
 export type TOrders={
 
     productName:string;

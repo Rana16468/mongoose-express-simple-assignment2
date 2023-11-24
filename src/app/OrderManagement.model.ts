@@ -76,7 +76,7 @@ TUserSchema.statics.isUserExists=async function(id:number){
 
 }
 
-//Users Module
+
 export const Users= model<TUser,UserMethodModel>('users',TUserSchema);
 
 
