@@ -11,7 +11,7 @@ const createUser=async(user:TUser)=>{
 // find all user information 
 const  retrieveAllUsers=async()=>{
 
-    const result=await Users.find({},{ username: 1, fullName: 1, age: 1, email: 1, address: 1});
+    const result=await Users.aggregate().project({ username: 1, fullName: 1, age: 1, email: 1, address: 1});
    
     return result;
 
@@ -24,7 +24,7 @@ const specificUserInformation=async(id:number)=>{
     if(await Users.isUserExists(id))
     {
 
-        const result=await Users.aggregate([{$match:{userId:id}}]);
+        const result=await Users.aggregate([{$match:{userId:id}}]).project({orders:0});
         return result;
     }
     else{

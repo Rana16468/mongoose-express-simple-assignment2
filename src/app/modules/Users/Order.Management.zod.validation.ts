@@ -35,7 +35,7 @@ const TUserSchemaValidation  = z.object({
 //order valodion 
 export  const TOrdersValidation=z.object({
 
-  productName:z.string(),
+  productName:z.string().min(1, {message:'Minuman Product Name Length 1 character'}).max(30, {message:'Maximum Product Name  Length 30 character'}),
   price:z.number(),
   quantity:z.number()
 

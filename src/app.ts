@@ -13,7 +13,7 @@ app.use('/api',UsersRouter);
 app.get('/', (req: Request, res: Response) => {
 
   
-  res.send('Hello World!');
+  res.status(200).json({success:true,message:'Order Management Server Successfully Running '})
 });
 
 export default app;

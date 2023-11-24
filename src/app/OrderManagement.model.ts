@@ -26,8 +26,6 @@ const TAddressSchema=new Schema<TAddress>({
 
 //order schema 
 
-//order schema 
-
 const TOrdersSchema= new Schema<TOrders>({
     productName:{type:String,required:[true,'Product Name is Requires']},
     price:{type:Number,required:[true,'Price is Required']},
@@ -65,12 +63,7 @@ TUserSchema.pre('save', async function(next){
     user.password=await bcrypt.hash(user.password,Number(config.bcrypt_salt_rounds));
     next();
 });
-TUserSchema.pre('updateOne',async function(next){
 
-    
-    
-    next();
-})
 
 
 
@@ -83,7 +76,7 @@ TUserSchema.statics.isUserExists=async function(id:number){
 
 }
 
-//Users Modules
+//Users Module
 export const Users= model<TUser,UserMethodModel>('users',TUserSchema);
 
 

@@ -19,8 +19,8 @@ const createUserController=async(req:Request,res:Response)=>{
 
         res.status(500).send({success:false,message:'User not found',error:{
             code: 404,
-            description: "User not found!",
-            serverErrorMessage:err.message
+            description:err.message || "User not found!",
+           
         }})
 
     }
@@ -42,8 +42,8 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
     catch(err:any){
         res.status(500).send({success:false,message:'User not found',error:{
             code: 404,
-            description: "User not found!",
-            serverErrorMessage:err.message
+            description: err.message || "User not found!",
+           
         }})
 
     }
@@ -63,8 +63,8 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
     {
         res.status(500).send({success:false,message:'User not found',error:{
             code: 404,
-            description: "User not found!",
-            serverErrorMessage:err.message
+            description: err.message || "User not found!",
+           
         }})
     }
  }
@@ -90,8 +90,8 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
   catch(err:any){
     res.status(500).send({success:false,message:'User not found',error:{
         code: 404,
-        description: "User not found!",
-        serverErrorMessage:err.message
+        description: err.message || "User not found!",
+       
     }})
 
   }
@@ -112,8 +112,8 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
     catch(err:any){
         res.status(500).send({success:false,message:'User not found',error:{
             code: 404,
-            description: "User not found!",
-            serverErrorMessage:err.message
+            description: err.message || "User not found!",
+          
         }})
 
     }
@@ -136,8 +136,8 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
     catch(err:any){
         res.status(500).send({success:false,message:'User not found',error:{
             code: 404,
-            description: "User not found!",
-            serverErrorMessage:err.message
+            description: err.message || "User not found!",
+            
       }})
 
     }
@@ -159,8 +159,8 @@ const  specific_User_Order=async(req:Request,res:Response)=>{
   {
     res.status(500).send({success:false,message:'User not found',error:{
         code: 404,
-        description: "User not found!",
-        serverErrorMessage:err.message
+        description: err.message || "User not found!",
+        
   }})
   }
 }
@@ -179,8 +179,8 @@ const calculateTotalPrice_SpecificOrder=async(req:Request,res:Response)=>{
     {
         res.status(500).send({success:false,message:'User not found',error:{
             code: 404,
-            description: "User not found!",
-            serverErrorMessage:err.message
+            description: err.message || "User not found!",
+            
       }})
     }
 
