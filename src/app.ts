@@ -8,7 +8,7 @@ app.use(express.json());
 //middlewere
 app.use(cors())
 
-app.use('/api',UsersRouter);
+app.use('/api/users',UsersRouter);
 
 app.get('/', (req: Request, res: Response) => {
 
