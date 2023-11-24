@@ -52,6 +52,7 @@ TUserSchema.set('toJSON', {
     virtuals: true,
     transform: function (doc, ret) {
       delete ret.password;
+      delete ret.id
       return ret;
     },
   });
