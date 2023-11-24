@@ -24,7 +24,7 @@ const specificUserInformation=async(id:number)=>{
     if(await Users.isUserExists(id))
     {
 
-        const result=await Users.aggregate([{$match:{userId:id}}]).project({orders:0});
+        const result=await Users.aggregate([{$match:{userId:id}}]).project({orders:0,password:0});
         return result;
     }
     else{

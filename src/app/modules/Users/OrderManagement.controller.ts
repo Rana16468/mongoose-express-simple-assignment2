@@ -55,7 +55,10 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
     try{
         const {userId}=req.params;
         const result=await UsersServices.specificUserInformation(Number(userId));
-        res.status(200).send({success:true,message:"User fetched successfully!",data:result})
+        res.status(200).send({success:true,message:"User fetched successfully!",data:result.reduce((accumulator, currentObject)=>{
+            Object.assign(accumulator, currentObject);
+            return accumulator;
+        },{})});
 
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -78,10 +81,14 @@ const All_Users_Controller=async(req:Request,res:Response)=>{
     const userData=req.body;
 
     const result=await UsersServices.UpdateUserInformation(Number(userId),userData);
+    const findUpdaeData=await UsersServices.specificUserInformation(Number(userId));
     res.status(200).send({
         success:true,
         message:"User updated successfully!",
-        data:result
+        data:result.matchedCount===1?findUpdaeData.reduce((accumulator, currentObject)=>{
+            Object.assign(accumulator, currentObject);
+            return accumulator;
+        },{}):'User Data not found!'
 
     })
 
@@ -149,7 +156,7 @@ const  specific_User_Order=async(req:Request,res:Response)=>{
     const {userId}=req.params;
     const result=await UsersServices.specificUserOrder(Number(userId));
     res.status(200).send({success:true,message:'Order fetched successfully!',data:result.reduce((accumulator, currentObject) => {
-        // Merge properties of currentObject into accumulator
+      
         Object.assign(accumulator, currentObject);
         return accumulator;
       }, {})})
